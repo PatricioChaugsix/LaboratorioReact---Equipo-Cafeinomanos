@@ -1,52 +1,42 @@
-import { useState } from 'react'
-import Button from './Button'
+import { useState } from "react";
 
-const formularioVacio = { titulo: '', asignatura: '', fecha: '' }
-
-function TaskForm({ onAgregar }) {
-  const [formulario, setFormulario] = useState(formularioVacio)
-  const [error, setError] = useState('')
-
-  function manejarCambio(evento) {
-    const { name, value } = evento.target
-    setFormulario({ ...formulario, [name]: value })
-  }
-
-  function manejarEnvio(evento) {
-    evento.preventDefault()
-    if (formulario.titulo.trim() === '') {
-      setError('El título es obligatorio')
-      return
+const TaskForm = ({ onAgregar, guardando }) => {
+  const [titulo, setTitulo] = useState("");
+  const [error, setError] = useState("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Mínimo 3 caracteres limpios
+    if (titulo.trim().length < 3) {
+      setError("El minimo del titulo es de 3 caracteres.");
+      return;
     }
-    onAgregar(formulario)
-    setFormulario(formularioVacio)
-    setError('')
-  }
-
+    // Se ejecuta la función (agregar) desde NewTaskView
+    const exito = await onAgregar(titulo.trim());
+    if (exito) {
+      setTitulo("");
+      setError("");
+    }
+  };
   return (
-    <form className="card task-form" onSubmit={manejarEnvio}>
-      <h2 className="section-title">Nueva tarea</h2>
-
-      <label>
-        Título
-        <input name="titulo" value={formulario.titulo} onChange={manejarCambio} />
-      </label>
-
-      <label>
-        Asignatura
-        <input name="asignatura" value={formulario.asignatura} onChange={manejarCambio} />
-      </label>
-
-      <label>
-        Fecha de entrega
-        <input type="date" name="fecha" value={formulario.fecha} onChange={manejarCambio} />
-      </label>
-
-      {error && <p className="form-error">{error}</p>}
-
-      <Button type="submit">Agregar tarea</Button>
+    <form onSubmit={handleSubmit} className="card">
+      <h2 className="section-title">
+        AGREGAR NUEVA TAREA
+      </h2>
+      <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
+        <input
+          type="text"
+          value={titulo}
+          onChange={(e) => setTitulo(e.target.value)}
+          placeholder="Ej: Estudiar para prueba de Física"
+          disabled={guardando}
+          style={{ flex: 1, padding: "8px", borderRadius: "6px", border: "1px solid #cbd5e1" }}
+        />
+        <button type="submit" disabled={guardando} className="btn btn-primary">
+          {guardando ? "Guardando..." : "Agregar"}
+        </button>
+      </div>
+      {error && <p style={{ color: "red", fontSize: "0.875rem" }}>{error}</p>}
     </form>
-  )
-}
-
-export default TaskForm
+  );
+};
+export default TaskForm;
