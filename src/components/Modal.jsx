@@ -1,17 +1,21 @@
-import Button from './Button'
-
-function Modal({ abierto, titulo, onCerrar, children }) {
-  if (!abierto) return null
-
+const Modal = ({ visible, mensaje, onConfirmar, onCancelar, deshabilitado }) => {
+  if (!visible) return null;
   return (
-    <div className="modal-overlay" onClick={onCerrar}>
-      <div className="modal" onClick={(evento) => evento.stopPropagation()}>
-        <h2 className="section-title">{titulo}</h2>
-        <div className="modal-content">{children}</div>
-        <Button onClick={onCerrar}>Cerrar</Button>
+    <div className="modal-overlay">
+      <div className="modal-box">
+        <p>{mensaje}</p>
+        <div className="modal-acciones">
+          <button 
+            className="btn btn-danger" onClick={onConfirmar} disabled={deshabilitado}>
+            Confirmar
+          </button>
+          <button 
+            className="btn btn-secondary" onClick={onCancelar} disabled={deshabilitado}>
+            Cancelar
+          </button>
+        </div>
       </div>
     </div>
-  )
-}
-
-export default Modal
+  );
+};
+export default Modal;
