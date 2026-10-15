@@ -1,12 +1,13 @@
-import TaskForm from '../components/TaskForm'
+import TaskForm from "../components/TaskForm";
 
-function NewTaskView({ onAgregar, onTareaCreada }) {
-  function manejarAgregar(datos) {
-    onAgregar(datos)
-    onTareaCreada()
-  }
-
-  return <TaskForm onAgregar={manejarAgregar} />
-}
-
-export default NewTaskView
+const NewTaskView = ({ onAgregar, guardando, onNavegarATareas }) => {
+  const handleAgregarYRedirigir = async (titulo) => {
+    const exito = await onAgregar(titulo);
+    if (exito) {
+      onNavegarATareas();
+    }
+    return exito;
+  };
+  return <TaskForm onAgregar={handleAgregarYRedirigir} guardando={guardando} />;
+};
+export default NewTaskView;
