@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Button from "./Button";
 
 const TaskForm = ({ onAgregar, guardando }) => {
   const [titulo, setTitulo] = useState("");
@@ -22,20 +23,22 @@ const TaskForm = ({ onAgregar, guardando }) => {
       <h2 className="section-title">
         AGREGAR NUEVA TAREA
       </h2>
-      <div style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
+      <div className="form-row">
         <input
           type="text"
+          className="form-input"
           value={titulo}
           onChange={(e) => setTitulo(e.target.value)}
           placeholder="Ej: Estudiar para prueba de Física"
           disabled={guardando}
-          style={{ flex: 1, padding: "8px", borderRadius: "6px", border: "1px solid #cbd5e1" }}
         />
-        <button type="submit" disabled={guardando} className="btn btn-primary">
-          {guardando ? "Guardando..." : "Agregar"}
-        </button>
+        <Button
+          type="submit"
+          label={guardando ? "Guardando..." : "Agregar"}
+          disabled={guardando}
+        />
       </div>
-      {error && <p style={{ color: "red", fontSize: "0.875rem" }}>{error}</p>}
+      {error && <p className="form-error">{error}</p>}
     </form>
   );
 };

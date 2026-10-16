@@ -1,3 +1,5 @@
+import Button from "./Button";
+
 const Modal = ({ visible, mensaje, onConfirmar, onCancelar, deshabilitado }) => {
   if (!visible) return null;
   return (
@@ -5,14 +7,8 @@ const Modal = ({ visible, mensaje, onConfirmar, onCancelar, deshabilitado }) => 
       <div className="modal-box">
         <p>{mensaje}</p>
         <div className="modal-acciones">
-          <button 
-            className="btn btn-danger" onClick={onConfirmar} disabled={deshabilitado}>
-            Confirmar
-          </button>
-          <button 
-            className="btn btn-secondary" onClick={onCancelar} disabled={deshabilitado}>
-            Cancelar
-          </button>
+          <Button label="Confirmar" variant="danger" onClick={onConfirmar} disabled={deshabilitado} />
+          <Button label="Cancelar" variant="secondary" onClick={onCancelar} disabled={deshabilitado} />
         </div>
       </div>
     </div>

@@ -7,9 +7,16 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  background-color: #f8fafc;
+  color: #0f172a;
   -webkit-font-smoothing: antialiased;
 }
 
 p {
   margin: 0 0 6px;
+}
+
+button,
+input {
+  font-family: inherit;
 }

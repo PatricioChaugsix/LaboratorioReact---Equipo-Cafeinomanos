@@ -1,34 +1,35 @@
-import { useState } from 'react'
+import TaskFilters from '../components/TaskFilters'
 import TaskList from '../components/TaskList'
-import Modal from '../components/Modal'
 
-function TasksView({ tareas, onAlternar, onEliminar }) {
-  const [tareaSeleccionada, setTareaSeleccionada] = useState(null)
-
+function TasksView({
+  tareasVisibles,
+  hayTareas,
+  filtro,
+  onCambiarFiltro,
+  busqueda,
+  onCambiarBusqueda,
+  onAlternar,
+  onEditar,
+  onEliminar,
+  deshabilitado,
+}) {
   return (
     <>
+      <TaskFilters
+        filtro={filtro}
+        onCambiarFiltro={onCambiarFiltro}
+        busqueda={busqueda}
+        onCambiarBusqueda={onCambiarBusqueda}
+      />
       <TaskList
         title="Listado de tareas"
-        tareas={tareas}
-        onSeleccionar={setTareaSeleccionada}
+        tareas={tareasVisibles}
+        hayTareas={hayTareas}
         onAlternar={onAlternar}
+        onEditar={onEditar}
         onEliminar={onEliminar}
+        deshabilitado={deshabilitado}
       />
-
-      <Modal
-        abierto={tareaSeleccionada !== null}
-        titulo="Tarea seleccionada"
-        onCerrar={() => setTareaSeleccionada(null)}
-      >
-        {tareaSeleccionada && (
-          <>
-            <p><strong>{tareaSeleccionada.titulo}</strong></p>
-            <p>Asignatura: {tareaSeleccionada.asignatura || 'Sin asignatura'}</p>
-            <p>Entrega: {tareaSeleccionada.fecha || 'Sin fecha'}</p>
-            <p>Estado: {tareaSeleccionada.completada ? 'Completada' : 'Pendiente'}</p>
-          </>
-        )}
-      </Modal>
     </>
   )
 }

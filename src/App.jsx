@@ -9,10 +9,34 @@ import NewTaskView from './views/NewTaskView'
 import useTareas from './hooks/useTareas'
 
 function App() {
+  // Vista activa (RF13): 'resumen', 'tareas' o 'nueva'.
   const [vista, setVista] = useState('resumen')
-  const { tareas, cargando, guardando, error, crearTarea, alternarEstado, editarTitulo, eliminarTarea, } = useTareas()
+  const {
+    tareas,
+    tareasVisibles,
+    contadores,
+    filtro,
+    setFiltro,
+    busqueda,
+    setBusqueda,
+    cargando,
+    guardando,
+    error,
+    crearTarea,
+    alternarEstado,
+    editarTitulo,
+    eliminarTarea,
+  } = useTareas()
   // Estado local para seleccionar tarea a eliminar en el Modal.
   const [tareaAEliminar, setTareaAEliminar] = useState(null)
+  // Mensaje de resultado al crear una tarea.
+  const [aviso, setAviso] = useState('')
+
+  const cambiarVista = (nuevaVista) => {
+    setAviso('')
+    setVista(nuevaVista)
+  }
+
   // Confirmar eliminación desde el Modal RF07.
   const handleConfirmarEliminar = async () => {
     if (tareaAEliminar) {
@@ -23,21 +47,33 @@ function App() {
   return (
     <main className="app-container">
       <Header title="TaskCampus" description="Gestor de tareas académicas" />
-      <Navigation vistaActual={vista} onCambiarVista={setVista} />
+      <Navigation vistaActual={vista} onCambiarVista={cambiarVista} />
       {cargando && <p className="status-message info">
-        Cargando...</p>}
+        Cargando tareas...</p>}
       {error && <p className="status-message error">
         Error: {error}</p>}
       {guardando && <p className="status-message warning">
         Sincronizando...</p>}
+      {aviso && !error && <p className="status-message success">
+        {aviso}</p>}
       {!cargando && (
         <>
           {vista === 'resumen' && (
-            <SummaryView tareas={tareas} />
+            <SummaryView
+              contadores={contadores}
+              filtro={filtro}
+              busqueda={busqueda}
+              onIrATareas={() => cambiarVista('tareas')}
+            />
           )}
           {vista === 'tareas' && (
             <TasksView
-              tareas={tareas}
+              tareasVisibles={tareasVisibles}
+              hayTareas={tareas.length > 0}
+              filtro={filtro}
+              onCambiarFiltro={setFiltro}
+              busqueda={busqueda}
+              onCambiarBusqueda={setBusqueda}
               onAlternar={alternarEstado}
               onEditar={editarTitulo}
               onEliminar={(id) => setTareaAEliminar(id)}
@@ -48,7 +84,10 @@ function App() {
             <NewTaskView
               onAgregar={crearTarea}
               guardando={guardando}
-              onTareaCreada={() => setVista('tareas')}
+              onNavegarATareas={() => {
+                setVista('tareas')
+                setAviso('Tarea creada correctamente.')
+              }}
             />
           )}
         </>

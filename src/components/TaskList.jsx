@@ -1,20 +1,24 @@
 import TaskItem from './TaskItem'
 
-function TaskList({ title, tareas, onSeleccionar, onAlternar, onEliminar }) {
+function TaskList({ title, tareas, hayTareas, onAlternar, onEditar, onEliminar, deshabilitado }) {
   return (
     <section className="card">
       <h2 className="section-title">{title}</h2>
-      {tareas.length === 0 ? (
-        <p>No hay tareas todavía.</p>
-      ) : (
+      {/* RF11: se diferencia una lista vacía de una búsqueda sin resultados */}
+      {!hayTareas && <p className="lista-vacia">No hay tareas todavía.</p>}
+      {hayTareas && tareas.length === 0 && (
+        <p className="lista-vacia">Ninguna tarea coincide con el filtro o la búsqueda.</p>
+      )}
+      {tareas.length > 0 && (
         <ul className="task-list">
           {tareas.map((tarea) => (
             <TaskItem
               key={tarea.id}
               tarea={tarea}
-              onSeleccionar={onSeleccionar}
-              onAlternar={onAlternar}
+              onToggle={onAlternar}
+              onEditar={onEditar}
               onEliminar={onEliminar}
+              deshabilitado={deshabilitado}
             />
           ))}
         </ul>
